@@ -1,6 +1,6 @@
 #include <LittleFS.h>
 #include <globals.h>
-#include <server.h>
+#include <web_handlers.h>
 
 void InitWebSocket() {
     ws.onEvent(OnEvent);
