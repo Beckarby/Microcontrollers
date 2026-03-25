@@ -28,6 +28,11 @@ int lastButtonReading = HIGH;
 int buttonState = HIGH;
 unsigned long lastDebounceTime = 0;
 
+const int SERVO_DELAY = 1000;
+int servo_delay_count = 0;
+
+bool servo_moving = false;
+
 void setup() {
     Serial.begin(9600);
 
@@ -72,12 +77,24 @@ void loop() {
         if (reading != buttonState) {
             buttonState = reading;
             if (buttonState == LOW) {
+                servo_moving = true;
                 myServo.write(180);
                 Serial.println("Button pressed: servo moved to 180");
             }
         }
     }
     lastButtonReading = reading;
+
+    if (servo_moving) {
+        if (servo_delay_count >= SERVO_DELAY) {
+            myServo.write(0);
+            Serial.println("Servo moved back to 0");
+            servo_moving = false;
+            servo_delay_count = 0;
+        } else {
+            servo_delay_count += 10;
+        }
+    }
 
     if (millis() - lastSensorUpdate > updateInterval) {
         float hum = dht.readHumidity();
