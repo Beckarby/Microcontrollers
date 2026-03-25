@@ -1,5 +1,5 @@
 #include <globals.h>
-#include <server.h>
+#include <web_handlers.h>
 
 void NotFound(AsyncWebServerRequest* request){
     request->send(404, "text/plain", "ERROR 404: PAGE NOT FOUND");
