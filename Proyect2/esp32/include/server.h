@@ -1,5 +1,8 @@
+
 #pragma once
 #include <globals.h>
+#include <ESPAsyncWebServer.h>
+#include <ArduinoJson.h>
 
 void NotFound(AsyncWebServerRequest *request);
 void OnEvent(AsyncWebSocket* server, AsyncWebSocketClient* client, AwsEventType type, void* arg, uint8_t* data, size_t len);
