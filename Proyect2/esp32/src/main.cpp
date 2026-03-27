@@ -95,7 +95,15 @@ void startBuzzer() {
 }
 
 void updateBuzzer() {
-  if (buzzerActive && (millis() - buzzerStartTime >= BUZZER_DURATION)) {
+  /*if (buzzerActive && (millis() - buzzerStartTime >= BUZZER_DURATION)) {
+    digitalWrite(BUZZER_PIN, LOW);
+    buzzerActive = false;
+  }*/
+
+  if (temperatura >= 23.0) {
+    digitalWrite(BUZZER_PIN, HIGH);
+    buzzerActive = true;
+  } else {
     digitalWrite(BUZZER_PIN, LOW);
     buzzerActive = false;
   }
@@ -219,6 +227,8 @@ void checkButton() {
 // Setup
 // -----------------------------------------------------------------------------
 void setup() {
+  delay(1000);
+
   Serial.begin(115200);
 
   WiFi.softAP(AP_NAME);
