@@ -8,12 +8,18 @@ const emptyValue = "--"
 const initialTelemetry = {
   temperature: null,
   humidity: null,
+  pot: null,
+  servoAngle: null,
+  mode: null,
   timestamp: Date.now(),
 }
 
 const cardDefinitions = [
   { key: "temperature", label: "Temperature", suffix: "°C" },
   { key: "humidity", label: "Humidity", suffix: "%" },
+  { key: "pot", label: "Pot", suffix: "" },
+  { key: "servoAngle", label: "Servo Angle", suffix: "°" },
+  { key: "mode", label: "Mode", suffix: "" },
   {
     key: "timestamp",
     label: "Timestamp",
@@ -77,14 +83,40 @@ function requestInitialValues() {
   }
 }
 
+function toFixedOrNull(value) {
+  if (value === null || value === undefined) {
+    return null
+  }
+
+  const numericValue = Number(value)
+  return Number.isFinite(numericValue) ? numericValue.toFixed(1) : null
+}
+
 function updateTelemetry(message) {
   const nextTelemetry = { ...telemetry.value }
 
-  if (message.temperature !== undefined) {
-    nextTelemetry.temperature = Number(message.temperature).toFixed(1)
+  const temperatureValue = message.temperature
+  if (temperatureValue !== undefined) {
+    nextTelemetry.temperature = toFixedOrNull(temperatureValue)
   }
-  if (message.humidity !== undefined) {
-    nextTelemetry.humidity = Number(message.humidity).toFixed(1)
+  const humidityValue = message.humidity
+  if (humidityValue !== undefined) {
+    nextTelemetry.humidity = toFixedOrNull(humidityValue)
+  }
+
+  const potValue = message.pot ?? message.pot_target_angle
+  if (potValue !== undefined) {
+    nextTelemetry.pot = potValue
+  }
+
+  const servoAngleValue = message.servoAngle ?? message.servo_angle
+  if (servoAngleValue !== undefined) {
+    nextTelemetry.servoAngle = servoAngleValue
+  }
+
+  const modeValue = message.mode ?? message.auto_mode
+  if (modeValue !== undefined) {
+    nextTelemetry.mode = typeof modeValue === "boolean" ? (modeValue ? "Auto" : "Manual") : modeValue
   }
 
   nextTelemetry.timestamp = message.timestamp ?? Date.now()
