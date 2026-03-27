@@ -121,6 +121,7 @@ function updateTelemetry(message) {
 
   nextTelemetry.timestamp = message.timestamp ?? Date.now()
   telemetry.value = nextTelemetry
+  console.log("Updated telemetry:", nextTelemetry)
 }
 
 function connectWebSocket() {
